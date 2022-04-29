@@ -191,20 +191,8 @@ void MainWindow::on_QuickSort_clicked()
     }
     ui->sortedOrNot->setText("Sorted Using Quick Sort");
 
-    if(NS)
-    {
-        ui->status->setText(ui->status->text() + "Normal Search");
-    }
-    else if(BS)
-    {
-        ui->status->setText(ui->status->text() + "Binary Search");
-    }
-    else if(STLS)
-    {
-        ui->status->setText(ui->status->text() + "STL Find");
-    }
     this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
-    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
+    ui->status->setText("Quick Sort\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
@@ -228,19 +216,8 @@ void MainWindow::on_MergeSort_clicked()
     }
     ui->sortedOrNot->setText("Sorted Using Merge Sort");
 
-    if(NS)
-    {
-        ui->status->setText(ui->status->text() + "Normal Search");
-    }
-    else if(BS)
-    {
-        ui->status->setText(ui->status->text() + "Binary Search");
-    }
-    else if(STLS)
-    {
-        ui->status->setText(ui->status->text() + "STL Find");
-    }
-    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
+
+    ui->status->setText("Merge Sort\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
@@ -265,19 +242,8 @@ void MainWindow::on_BubbleSort_clicked()
        ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
     ui->sortedOrNot->setText("Sorted Using Bubble Sort");
-    if(NS)
-    {
-        ui->status->setText(ui->status->text() + "Normal Search");
-    }
-    else if(BS)
-    {
-        ui->status->setText(ui->status->text() + "Binary Search");
-    }
-    else if(STLS)
-    {
-        ui->status->setText(ui->status->text() + "STL Find");
-    }
-    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
+
+    ui->status->setText( "Bubble Sort\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
@@ -302,19 +268,8 @@ void MainWindow::on_STLSort_clicked()
     }
     ui->sortedOrNot->setText("Sorted Using STL Sort");
 
-    if(NS)
-    {
-        ui->status->setText(ui->status->text() + "Normal Search");
-    }
-    else if(BS)
-    {
-        ui->status->setText(ui->status->text() + "Binary Search");
-    }
-    else if(STLS)
-    {
-        ui->status->setText(ui->status->text() + "STL Find");
-    }
-    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
+
+    ui->status->setText("STL Sort\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time  of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
