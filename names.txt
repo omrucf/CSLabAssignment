@@ -1,0 +1,8 @@
+Names and IDs:
+Adham Hassan 900212942
+Mhamad Khalil 900214275
+Omar Yossuf 900212166
+Instructor: Esraa Hamdi
+TA: Walaa El-Kadi
+Course: CS110
+Assignment #01

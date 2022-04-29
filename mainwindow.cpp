@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    searchTime = 0;
+    sortTime = 0;
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
 }
 
 MainWindow::~MainWindow()
@@ -65,6 +68,7 @@ int MainWindow::BinarySearch(int array[], int num, int low, int high)
         {high = mid - 1;}
       }
       ui->status->setText("number: " + QString::number(num) + " was not found!");
+
       return -1;
 
 }
@@ -112,6 +116,10 @@ void MainWindow::BubbleSort(int Array[], const int arraySize)
 void MainWindow::on_normalSearch_clicked()
 {
     NS=true,BS=false,STLS=false;
+    SearchType = "Normal Search";
+    ui->error->setText("");
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
+
 }
 
 void MainWindow::on_binarySearch_clicked()
@@ -119,6 +127,9 @@ void MainWindow::on_binarySearch_clicked()
     if(ui->sortedOrNot->text()!="unsorted array")
     { NS=false,BS=true,STLS=false;
          ui->error->setText("");
+         SearchType = "Binary Search";
+         ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
+
     }
     else
     {
@@ -129,11 +140,16 @@ void MainWindow::on_binarySearch_clicked()
 void MainWindow::on_STLFind_clicked()
 {
      NS=false,BS=false,STLS=true;
+     ui->error->setText("");
+     SearchType = "STL Find";
+     ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
+
 }
 
 void MainWindow::on_generateDataset_clicked()
 {
     size = ui->size->text().toInt();
+    ui->error->setText("");
     if(exists)
     {
         delete arr;
@@ -158,10 +174,13 @@ void MainWindow::on_generateDataset_clicked()
         arr[i]=rand()%size+1;
         ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
+
 }
 
 void MainWindow::on_QuickSort_clicked()
 {
+    ui->error->setText("");
     chrono::steady_clock::time_point now = chrono::steady_clock::now();
     QuickSort(arr,0,size-1);
     chrono::steady_clock::time_point then = chrono::steady_clock::now();
@@ -171,7 +190,7 @@ void MainWindow::on_QuickSort_clicked()
        ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
     ui->sortedOrNot->setText("Sorted Using Quick Sort");
-    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Quick Sort\nSearch method: ");
+
     if(NS)
     {
         ui->status->setText(ui->status->text() + "Normal Search");
@@ -185,14 +204,19 @@ void MainWindow::on_QuickSort_clicked()
         ui->status->setText(ui->status->text() + "STL Find");
     }
     this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
     ui->status->clear();
+    SortingType = "Quick Sort";
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
+
 }
 
 void MainWindow::on_MergeSort_clicked()
 {
+    ui->error->setText("");
     ui->view->clear();
     chrono::steady_clock::time_point now = chrono::steady_clock::now();
     mergesort(arr,0,size-1);
@@ -203,7 +227,7 @@ void MainWindow::on_MergeSort_clicked()
        ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
     ui->sortedOrNot->setText("Sorted Using Merge Sort");
-    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Merge Sort\nSearch method: ");
+
     if(NS)
     {
         ui->status->setText(ui->status->text() + "Normal Search");
@@ -216,15 +240,18 @@ void MainWindow::on_MergeSort_clicked()
     {
         ui->status->setText(ui->status->text() + "STL Find");
     }
-
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
     ui->status->clear();
+    SortingType = "Merge Sort";
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
 }
 
 void MainWindow::on_BubbleSort_clicked()
 {
+    ui->error->setText("");
     chrono::steady_clock::time_point now = chrono::steady_clock::now();
 
     ui->view->clear();
@@ -238,7 +265,6 @@ void MainWindow::on_BubbleSort_clicked()
        ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
     ui->sortedOrNot->setText("Sorted Using Bubble Sort");
-    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Bubble Sort\nSearch method: ");
     if(NS)
     {
         ui->status->setText(ui->status->text() + "Normal Search");
@@ -251,14 +277,18 @@ void MainWindow::on_BubbleSort_clicked()
     {
         ui->status->setText(ui->status->text() + "STL Find");
     }
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
     ui->status->clear();
+    SortingType = "Bubble Sort";
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
 }
 
 void MainWindow::on_STLSort_clicked()
 {
+    ui->error->setText("");
     chrono::steady_clock::time_point now = chrono::steady_clock::now();
 
     ui->view->clear();
@@ -271,7 +301,7 @@ void MainWindow::on_STLSort_clicked()
        ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
     }
     ui->sortedOrNot->setText("Sorted Using STL Sort");
-    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: STL Sort\nSearch method: ");
+
     if(NS)
     {
         ui->status->setText(ui->status->text() + "Normal Search");
@@ -284,14 +314,18 @@ void MainWindow::on_STLSort_clicked()
     {
         ui->status->setText(ui->status->text() + "STL Find");
     }
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
     ui->status->setText(ui->status->text() + "\nDuration time  of sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
     ui->status->clear();
+    SortingType = "STL Sort";
+    ui->info->setText("Dataset size: " + QString::number(size) + "\n\nSorting Type: " + SortingType + "\n\nSearch Type: " + SearchType);
 }
 
 void MainWindow::on_FindIt_clicked()
 {
+    ui->error->setText("");
     int num = ui->number->text().toInt();
     chrono::steady_clock::time_point now = chrono::steady_clock::now();
     if(NS)
@@ -307,8 +341,9 @@ void MainWindow::on_FindIt_clicked()
         STLF(num);
     }
     chrono::steady_clock::time_point then = chrono::steady_clock::now();
-    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
-    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->sortTime));
+    this->searchTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->searchTime));
+    ui->status->setText(ui->status->text() + "\nDuration time of Sorting: " + QString::number(this->sortTime));
     m.setText(ui->status->text());
     m.exec();
     ui->status->clear();
@@ -369,7 +404,6 @@ void MainWindow::swap(int & x, int & y)
 
 void MainWindow::STLF(int num)
 {
-//    int it = find(arr,0,size,num);
     auto it = std::find(&arr[0],&arr[size-1],num);
 
     if(*it == num)

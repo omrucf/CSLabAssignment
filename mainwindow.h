@@ -15,13 +15,14 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    int size;
+    int size = 0;
     int* arr;
     bool exists = false;
     bool found = false;
     bool view = false;
     bool NS = false, BS = false, STLS = false;
-    double sortTime;
+    double sortTime, searchTime;
+    QString SearchType = "", SortingType = "";
     QMessageBox m;
 public:
     MainWindow(QWidget *parent = nullptr);
