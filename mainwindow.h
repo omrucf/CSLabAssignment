@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include <time.h>
+#include <iostream>
+#include <QMessageBox>
+
+using namespace std;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,16 +21,20 @@ class MainWindow : public QMainWindow
     bool found = false;
     bool view = false;
     bool NS = false, BS = false, STLS = false;
+    double sortTime;
+    QMessageBox m;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void NormalSearch(int);
-    void BinarySearch(int);
-    void STLFind(int);
-    void QuickSort();
-    void MergeSort();
-    void BubbleSort();
-    void STLSort();
+    int BinarySearch(int [], int, int, int);
+    void QuickSort(int [],int,int);
+    int partition (int [], int,int);
+    void BubbleSort(int [], const int );
+    void mergesort(int [],int,int);
+    void merge(int [],int,int,int);
+    void swap (int&,int&);
+    void STLF(int);
 private slots:
     void on_normalSearch_clicked();
 

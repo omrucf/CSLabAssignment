@@ -11,9 +11,7 @@
    </rect>
   </property>
   <property name="font">
-   <font>
-    <family>Chalkboard</family>
-   </font>
+   <font/>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -29,9 +27,7 @@
      </rect>
     </property>
     <property name="font">
-     <font>
-      <family>Chalkboard</family>
-     </font>
+     <font/>
     </property>
     <property name="text">
      <string>chose your search method</string>
@@ -120,9 +116,9 @@
    <widget class="QLabel" name="sortedOrNot">
     <property name="geometry">
      <rect>
-      <x>447</x>
+      <x>357</x>
       <y>30</y>
-      <width>101</width>
+      <width>281</width>
       <height>20</height>
      </rect>
     </property>
@@ -207,7 +203,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Chalkboard</family>
       <pointsize>20</pointsize>
      </font>
     </property>
@@ -231,7 +226,7 @@
    <widget class="QLabel" name="status">
     <property name="geometry">
      <rect>
-      <x>770</x>
+      <x>780</x>
       <y>360</y>
       <width>161</width>
       <height>191</height>

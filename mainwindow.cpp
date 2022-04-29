@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete [] arr;
     delete ui;
 }
 
@@ -21,8 +22,15 @@ void MainWindow::NormalSearch(int num)
         {
             if(arr[i]==num)
             {
-                found = true;
-                ui->status->setText("FOUND!!\nthe number: " + QString::number(num) + " exists in the list in the position number: " + QString::number(i) + "!");
+                if(!found)
+                {
+                    found = true;
+                    ui->status->setText("FOUND!!\nthe number: " + QString::number(num) + " exists in the list in the position number: " + QString::number(i));
+                }
+                else
+                {
+                    ui->status->setText(ui->status->text() + ", " + QString::number(i));
+                }
             }
         }
         if(!found && ui->number->text()!="")
@@ -39,54 +47,89 @@ void MainWindow::NormalSearch(int num)
     }
 }
 
-void MainWindow::BinarySearch(int num)
+int MainWindow::BinarySearch(int array[], int num, int low, int high)
 {
+      while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (array[mid] == num)
+        {
+            ui->status->setText("FOUND!!\nthe number: " + QString::number(num) + " exists in the list in the position number: " + QString::number(mid) + "!");
+            return mid;
+        }
+
+        if (array[mid] < num)
+        {low = mid + 1;}
+
+        else
+        {high = mid - 1;}
+      }
+      ui->status->setText("number: " + QString::number(num) + " was not found!");
+      return -1;
 
 }
 
-void MainWindow::STLFind(int num)
+void MainWindow::QuickSort(int a[], int start, int end)
 {
-
+    if (start<end)
+        {
+            int pIndex = partition(a, start, end);
+            QuickSort(a,start,pIndex-1);
+            QuickSort(a,pIndex+1,end);
+    }
 }
 
-void MainWindow::QuickSort()
+int MainWindow::partition(int a[], int start, int end)
 {
-
+    int pivot = a[end];
+       int pIndex = start; // partition index
+       for (int i= start; i<end;i++)
+       {
+           if (a[i] < pivot)
+           {
+               swap(a[i], a[pIndex]);
+               pIndex++;
+           }
+       }
+       swap (a[pIndex],a[end]);
+       return pIndex;
 }
 
-void MainWindow::MergeSort()
+void MainWindow::BubbleSort(int Array[], const int arraySize)
 {
-
+    {
+        for(int j = 0 ; j < arraySize; j++)
+        {
+            for(int number = j + 1; number < arraySize; number++)
+            {
+                if(Array[j] > Array[number]) // swap if bigger
+                    swap(Array[j],Array[number]);
+            }
+        }
+    }
 }
-
-void MainWindow::BubbleSort()
-{
-
-}
-
-void MainWindow::STLSort()
-{
-
-}
-
 
 void MainWindow::on_normalSearch_clicked()
 {
     NS=true,BS=false,STLS=false;
 }
 
-
 void MainWindow::on_binarySearch_clicked()
 {
-     NS=false,BS=true,STLS=false;
+    if(ui->sortedOrNot->text()!="unsorted array")
+    { NS=false,BS=true,STLS=false;
+         ui->error->setText("");
+    }
+    else
+    {
+        ui->error->setText("array must be sorted first!");
+    }
 }
-
 
 void MainWindow::on_STLFind_clicked()
 {
      NS=false,BS=false,STLS=true;
 }
-
 
 void MainWindow::on_generateDataset_clicked()
 {
@@ -104,6 +147,7 @@ void MainWindow::on_generateDataset_clicked()
     if (view)
     {
     ui->view->clear();
+    ui->sortedOrNot->setText("unsorted array");
     }
     else
     {
@@ -116,37 +160,225 @@ void MainWindow::on_generateDataset_clicked()
     }
 }
 
-
 void MainWindow::on_QuickSort_clicked()
 {
-
+    chrono::steady_clock::time_point now = chrono::steady_clock::now();
+    QuickSort(arr,0,size-1);
+    chrono::steady_clock::time_point then = chrono::steady_clock::now();
+    ui->view->clear();
+    for(int i=0;i<size;i++)
+    {
+       ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
+    }
+    ui->sortedOrNot->setText("Sorted Using Quick Sort");
+    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Quick Sort\nSearch method: ");
+    if(NS)
+    {
+        ui->status->setText(ui->status->text() + "Normal Search");
+    }
+    else if(BS)
+    {
+        ui->status->setText(ui->status->text() + "Binary Search");
+    }
+    else if(STLS)
+    {
+        ui->status->setText(ui->status->text() + "STL Find");
+    }
+    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+    ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
+    m.setText(ui->status->text());
+    m.exec();
+    ui->status->clear();
 }
-
 
 void MainWindow::on_MergeSort_clicked()
 {
+    ui->view->clear();
+    chrono::steady_clock::time_point now = chrono::steady_clock::now();
+    mergesort(arr,0,size-1);
+    chrono::steady_clock::time_point then = chrono::steady_clock::now();
+    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+    for(int i=0;i<size;i++)
+    {
+       ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
+    }
+    ui->sortedOrNot->setText("Sorted Using Merge Sort");
+    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Merge Sort\nSearch method: ");
+    if(NS)
+    {
+        ui->status->setText(ui->status->text() + "Normal Search");
+    }
+    else if(BS)
+    {
+        ui->status->setText(ui->status->text() + "Binary Search");
+    }
+    else if(STLS)
+    {
+        ui->status->setText(ui->status->text() + "STL Find");
+    }
 
+    ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
+    m.setText(ui->status->text());
+    m.exec();
+    ui->status->clear();
 }
-
 
 void MainWindow::on_BubbleSort_clicked()
 {
+    chrono::steady_clock::time_point now = chrono::steady_clock::now();
 
+    ui->view->clear();
+    chrono::steady_clock::time_point then = chrono::steady_clock::now();
+    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+
+    BubbleSort(arr,size);
+    ui->view->clear();
+    for(int i=0;i<size;i++)
+    {
+       ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
+    }
+    ui->sortedOrNot->setText("Sorted Using Bubble Sort");
+    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: Bubble Sort\nSearch method: ");
+    if(NS)
+    {
+        ui->status->setText(ui->status->text() + "Normal Search");
+    }
+    else if(BS)
+    {
+        ui->status->setText(ui->status->text() + "Binary Search");
+    }
+    else if(STLS)
+    {
+        ui->status->setText(ui->status->text() + "STL Find");
+    }
+    ui->status->setText(ui->status->text() + "\nDuration time of sorting: " + QString::number(this->sortTime));
+    m.setText(ui->status->text());
+    m.exec();
+    ui->status->clear();
 }
-
 
 void MainWindow::on_STLSort_clicked()
 {
+    chrono::steady_clock::time_point now = chrono::steady_clock::now();
 
+    ui->view->clear();
+    sort(arr, arr+size);
+    chrono::steady_clock::time_point then = chrono::steady_clock::now();
+    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+
+    for(int i=0;i<size;i++)
+    {
+       ui->view->addItem(QString::number(i) + ": " + QString::number(arr[i]));
+    }
+    ui->sortedOrNot->setText("Sorted Using STL Sort");
+    ui->status->setText("Dataset: " + QString::number(size) + "\nSorting Method: STL Sort\nSearch method: ");
+    if(NS)
+    {
+        ui->status->setText(ui->status->text() + "Normal Search");
+    }
+    else if(BS)
+    {
+        ui->status->setText(ui->status->text() + "Binary Search");
+    }
+    else if(STLS)
+    {
+        ui->status->setText(ui->status->text() + "STL Find");
+    }
+    ui->status->setText(ui->status->text() + "\nDuration time  of sorting: " + QString::number(this->sortTime));
+    m.setText(ui->status->text());
+    m.exec();
+    ui->status->clear();
 }
-
 
 void MainWindow::on_FindIt_clicked()
 {
     int num = ui->number->text().toInt();
+    chrono::steady_clock::time_point now = chrono::steady_clock::now();
     if(NS)
     {
         NormalSearch(num);
+    }
+    else if(BS)
+    {
+        BinarySearch(arr,num,0,size-1);
+    }
+    else if (STLS)
+    {
+        STLF(num);
+    }
+    chrono::steady_clock::time_point then = chrono::steady_clock::now();
+    this->sortTime = chrono::duration_cast<chrono::nanoseconds>(then-now).count();
+    ui->status->setText(ui->status->text() + "\nDuration time of search: " + QString::number(this->sortTime));
+    m.setText(ui->status->text());
+    m.exec();
+    ui->status->clear();
+}
+
+void MainWindow::mergesort(int array[],int start,int end)
+{
+  int mid;
+  if(start < end)
+  {
+     mid = (start + end) /2;
+     mergesort(array,start,mid);
+     mergesort(array,mid+1,end);
+     merge(array,start,mid,end);
+   }
+}
+
+void MainWindow::merge(int arr[],int start,int mid,int end)
+{
+    int i = start;
+      int j = mid + 1;
+      int k = start;
+
+      int temp[size];
+
+      while (i <= mid && j <= end) {
+        if (arr[i] <= arr[j]) {
+          temp[k] = arr[i];
+          i++;
+          k++;
+        } else {
+          temp[k] = arr[j];
+          j++;
+          k++;
+        }
+      }
+      while (i <= mid) {
+        temp[k] = arr[i];
+        i++;
+        k++;
+      }
+      while (j <= end) {
+        temp[k] = arr[j];
+        j++;
+        k++;
+      }
+      for (int p = start; p <= end; p++) {
+        arr[p] = temp[p];
+      }
+    }
+
+void MainWindow::swap(int & x, int & y)
+{
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+void MainWindow::STLF(int num)
+{
+//    int it = find(arr,0,size,num);
+    auto it = std::find(&arr[0],&arr[size-1],num);
+
+    if(*it == num)
+    {
+         ui->status->setText("FOUND!!\nthe number: " + QString::number(num) + " exists in the list");
+    }
+    else
+    {
+        ui->status->setText("number: " + QString::number(num) + " was not found!");
     }
 }
 
